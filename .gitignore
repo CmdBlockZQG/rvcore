@@ -1,0 +1,9 @@
+*.*
+*
+!*/
+!*.[cSh]
+!*.cc
+!*.hh
+!.gitignore
+!README.md
+!xmake.lua
