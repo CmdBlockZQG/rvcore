@@ -4,6 +4,10 @@
 !*.[cSh]
 !*.cc
 !*.hh
+!*.sv
+!*.py
 !.gitignore
 !README.md
 !xmake.lua
+!Makefile
+verilated_obj/

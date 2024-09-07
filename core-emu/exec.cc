@@ -8,7 +8,7 @@
 
 Exception::Exception(word_t cause, word_t tval): cause(cause), tval(tval) { }
 
-// 返回-1表示执行结束
+// 返回0表示执行尚未结束
 int Hart::step() {
   // 根据中断信号更新mip
   word_t mip_i = soc_get_mip();

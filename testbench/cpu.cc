@@ -37,9 +37,9 @@ void cpu_exec(uint64_t n) {
     break;
     case ST_END:
       if (ret > 0) {
-        Log("rvemu " ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN));
+        Log("rvcore " ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN));
       } else {
-        Log("rvemu " ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED));
+        Log("rvcore " ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED));
       }
     break;
     default: ;
