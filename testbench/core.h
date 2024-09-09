@@ -7,6 +7,7 @@ class Core {
   public:
     void (*init)(const char *imgfile, bool mute);
     int (*step)();
+    void (*exit)();
 
     Core(const char *name);
 };

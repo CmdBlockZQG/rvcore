@@ -41,6 +41,7 @@ void perf_event(int id) {
 }
 
 void log_perf_stat() {
+  Log_write("---------- Performance Counter ----------\n");
   for (int i = 0; i < perfcnt_num; ++i) {
     Log_write("%-20s\t%15lu\n", perfcnt_name[i], perfcnt_val[i]);
   }

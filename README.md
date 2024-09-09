@@ -19,9 +19,9 @@ CmdBlock的RISC-V处理器核
 - `core`
   - 处理器核实现，以及实现相关的工具
     - 处理器核本身
-    - 性能计数器 (TODO)
+    - 性能计数器
     - difftest ref/dut (TODO)
-    - 实现相关的trace工具 (TODO)
+    - 实现相关的trace工具
   - `core-emu`：软件ISA模拟器实现
   - `core-rtl-a`：简单短流水线rtl实现 (TODO)
 - `testbench`

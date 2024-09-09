@@ -5,12 +5,15 @@ Hart cpu {0};
 
 extern "C" {
 
-__EXPORT void init(const char *imgfile, bool mute) {
+__EXPORT void core_init(const char *imgfile, bool mute) {
   init_soc(imgfile, mute);
 }
 
-__EXPORT int step() {
+__EXPORT int core_step() {
   return cpu.step();
+}
+
+__EXPORT void core_exit() {
 }
 
 }

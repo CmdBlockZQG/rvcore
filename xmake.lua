@@ -8,7 +8,7 @@ add_includedirs("include")
 -- 公共动态库
 target("common")
   set_kind("shared")
-  add_cflags("-fvisibility=hidden")
+  set_symbols("hidden")
   add_files("common/**.cc")
 
 -- ISA模拟器
@@ -20,7 +20,7 @@ target("core-emu")
   add_files("sptenv/**.cc")
   -- 生成动态库文件，供testbench运行时加载
   set_kind("shared")
-  add_cflags("-fvisibility=hidden")
+  set_symbols("hidden")
   add_files("core-emu/**.cc")
 
 -- 简单流水线实现
@@ -40,7 +40,7 @@ target("core-rtl-a")
   add_links("verilated", "Vtop")
   -- 生成动态库文件，供testbench运行时加载
   set_kind("shared")
-  add_cflags("-fvisibility=hidden")
+  set_symbols("hidden")
   add_files("core-rtl-a/*.cc")
 
 -- testbench

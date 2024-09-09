@@ -31,7 +31,7 @@ void cpu_exec(uint64_t n) {
   switch (state) {
     case ST_RUNNING:
       state = ST_STOP;
-    break;
+    return; // NOTE: 防止执行dut退出的代码
     case ST_ABORT:
       Log("rvcore " ANSI_FMT("ABORT", ANSI_FG_RED));
     break;
@@ -44,4 +44,6 @@ void cpu_exec(uint64_t n) {
     break;
     default: ;
   }
+
+  dut->exit();
 }

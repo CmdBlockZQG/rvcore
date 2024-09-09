@@ -24,5 +24,6 @@ extern int cpu_state;
 
 void cpu_init();
 int cpu_step();
+void cpu_exit();
 
 #endif

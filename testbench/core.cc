@@ -10,8 +10,12 @@ Core::Core(const char *name) {
   void *handle = dlopen(so_filename, RTLD_LAZY);
   Assert(handle, "Failed to open so file '%s'", so_filename);
 
-  init = reinterpret_cast<decltype(init)>(dlsym(handle, "init"));
+  Log("Current core: %s", name);
+
+  init = reinterpret_cast<decltype(init)>(dlsym(handle, "core_init"));
   assert(init);
-  step = reinterpret_cast<decltype(step)>(dlsym(handle, "step"));
+  step = reinterpret_cast<decltype(step)>(dlsym(handle, "core_step"));
   assert(step);
+  exit = reinterpret_cast<decltype(exit)>(dlsym(handle, "core_exit"));
+  assert(exit);
 }
