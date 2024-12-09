@@ -1,12 +1,9 @@
 #include "uart.h"
 
-#include <cstdlib>
-#include <unistd.h>
-#include <fcntl.h>
-
 static const char *uart_input_ptr = " "
-                                    "busybox | head -n4\n"
-                                    "ls\n";
+  "busybox | head -n4\n"
+  "ls\n"
+  "./hello\n";
 
 static inline bool input_available() {
   return *uart_input_ptr != '\0';

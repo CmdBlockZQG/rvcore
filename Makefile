@@ -1,5 +1,5 @@
 BIN = build/testbench
-ARGS ?= --log=build/rvcore-log.txt --batch
+ARGS ?= --log=build --batch
 
 # override ARGS += --core=emu
 override ARGS += --core=rtl-a
