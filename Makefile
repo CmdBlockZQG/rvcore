@@ -1,5 +1,5 @@
 BIN = build/testbench
-ARGS ?= --log=build --batch
+ARGS ?= --log=build
 
 # CORE = emu
 CORE = rtl-b
@@ -18,6 +18,9 @@ rtl-b:
 run: $(CORE)
 	$(BIN) $(ARGS) $(IMG)
 
+cdb:
+	xmake project -k compile_commands
+
 default: build
 
-.PHONY: default build clean run
+.PHONY: default build clean rtl-b run cdb

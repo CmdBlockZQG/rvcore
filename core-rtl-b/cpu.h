@@ -1,5 +1,5 @@
-#ifndef __CORE_RTL_B_CPU_H__
-#define __CORE_RTL_B_CPU_H__
+#ifndef CORE_RTL_B_CPU_H_
+#define CORE_RTL_B_CPU_H_
 
 #include "common.h"
 
@@ -22,4 +22,4 @@ void cpu_init();
 int cpu_step();
 void cpu_exit();
 
-#endif //__CORE_RTL_B_CPU_H__
+#endif

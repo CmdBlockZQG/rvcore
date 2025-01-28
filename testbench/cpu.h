@@ -8,6 +8,6 @@
 
 extern std::unique_ptr<Core> dut;
 
-void cpu_exec(uint64_t n);
+int cpu_exec();
 
 #endif

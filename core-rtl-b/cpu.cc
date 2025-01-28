@@ -13,7 +13,7 @@ static VerilatedVcdC *wave = nullptr;
 
 static void init_wave() {
   extern std::string log_dir;
-  std::string wave_filename = log_dir + "rtl-b-wave.vcd";
+  const std::string wave_filename = log_dir + "rtl-b-wave.vcd";
   Verilated::traceEverOn(true);
   wave = new VerilatedVcdC;
   top_module->trace(wave, 99);
@@ -52,22 +52,15 @@ void cpu_init() {
 }
 
 int cpu_step() {
-  cpu_state = ST_RUNNING;
-  while (cpu_state == ST_RUNNING) {
+  while (true) {
     do_cycle();
-    if (top_module->debugIO_ebreak) {
-      if (gpr(10)) cpu_state = ST_ABORT;
-      else cpu_state = ST_HALT;
-    } else if (top_module->debugIO_commit) {
-      cpu_pc = top_module->debugIO_pc;
-      cpu_state = ST_STOP;
+    if (top_module->debugIO_ebreak) { // ebreak指令提交
+      return gpr(10) ? -1 : 1;
     }
-  }
-  switch (cpu_state) {
-    case ST_STOP: return 0;
-    case ST_HALT: return 1;
-    case ST_ABORT: return -1;
-    default: assert(0);
+    if (top_module->debugIO_commit) { // 一般指令提交
+      cpu_pc = top_module->debugIO_pc;
+      return 0;
+    }
   }
 }
 
