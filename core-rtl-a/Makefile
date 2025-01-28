@@ -9,10 +9,14 @@ OBJ_DIR = ./verilated_obj
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.sv")
 INCDIR = "$(abspath ./vsrc)"
 
-.DEFAULT_GOAL = default
-default:
+.DEFAULT_GOAL = build
+
+build:
 	@rm -rf $(OBJ_DIR)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 		--top-module $(TOP_NAME) \
 		$(VSRCS) $(addprefix -y , $(INCDIR)) \
 		--Mdir $(OBJ_DIR)
+
+clean:
+	@rm -rf $(OBJ_DIR)

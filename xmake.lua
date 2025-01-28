@@ -66,6 +66,5 @@ target("core-rtl-b")
 -- testbench
 target("testbench")
   add_deps("common")
-  add_links("readline")
   set_kind("binary")
   add_files("testbench/**.cc")

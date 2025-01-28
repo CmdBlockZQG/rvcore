@@ -8,9 +8,13 @@ VERILATOR_FLAGS = -cc --build --trace --timescale "1ns/1ns" --no-timing --autofl
 OBJ_DIR = ./verilated_obj
 VSRC = ./Top.sv
 
-.DEFAULT_GOAL = default
-default:
+.DEFAULT_GOAL = build
+
+build:
 	@rm -rf $(OBJ_DIR)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 		--top-module $(TOP_NAME) \
 		$(VSRC) --Mdir $(OBJ_DIR)
+
+clean:
+	@rm -rf $(OBJ_DIR)
