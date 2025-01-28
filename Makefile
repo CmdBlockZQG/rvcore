@@ -1,16 +1,21 @@
 BIN = build/testbench
 ARGS ?= --log=build --batch
 
-# override ARGS += --core=emu
-override ARGS += --core=rtl-a
+# CORE = emu
+CORE = rtl-b
+
+override ARGS += --core=$(CORE)
 
 build:
-	@xmake
+	xmake
 
 clean:
-	@xmake clean
+	xmake clean
 
-run:
+rtl-b:
+	cd core-rtl-b && make
+
+run: $(CORE)
 	$(BIN) $(ARGS) $(IMG)
 
 default: build

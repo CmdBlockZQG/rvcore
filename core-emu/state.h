@@ -13,7 +13,7 @@ enum : word_t {
 // 硬件线程CSR
 class HartCSR {
   public:
-    word_t mstatus;
+    word_t mstatus = 0;
 
     word_t mhartid;
     word_t mtvec, mepc, mcause = 0, mtval;

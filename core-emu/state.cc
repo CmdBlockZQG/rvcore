@@ -51,8 +51,8 @@ word_t &HartState::addr_csr(word_t addr) {
     case 0x302: return csr.medeleg;
     case 0x303: return csr.mideleg;
     case 0x304: return csr.mie;
-    case 0x312: return csr.medelegh;
     case 0x305: return csr.mtvec;
+    case 0x312: return csr.medelegh;
     case 0x340: return csr.mscratch;
     case 0x341: return csr.mepc;
     case 0x342: return csr.mcause;
@@ -132,16 +132,16 @@ void HartState::csr_write(word_t addr, word_t data) {
     case 0x144: break;
     // mstatus只支持部分字段，剩余全部硬编码0
     case 0x300: csr.mstatus = data & mstatus_mask; break;
+    // 忽略对misa的写入，不支持指令集功能选择
+    case 0x301: break;
     // mideleg只支持委托s模式中断
     case 0x303: csr.mideleg = data & sie_mask; break;
     // mie只支持除LCOFI之外的标准中断
     case 0x304: csr.mie = data & mie_mask; break;
-    // mip中，S模式中断pending可写，其余只读
-    case 0x344: csr.mip = data & sie_mask; break;
-    // 忽略对misa的写入，不支持指令集功能选择
-    case 0x301: break;
     // 忽略对mstatush的写入，仅支持小端序
     case 0x310: break;
+    // mip中，S模式中断pending可写，其余只读
+    case 0x344: csr.mip = data & sie_mask; break;
 
     default: addr_csr(addr) = data;
   }
