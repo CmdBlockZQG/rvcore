@@ -51,6 +51,11 @@ void init_log(const char *filename);
   _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
   __FILE__, __LINE__, __func__, ## __VA_ARGS__)
 
+#define Check(cond) \
+  do { \
+    if constexpr (rt_check) assert(cond); \
+  } while (0)
+
 #define Assert(cond, format, ...) \
   do { \
     if (!(cond)) { \
@@ -64,15 +69,15 @@ void init_log(const char *filename);
 
 // -------------------- misc --------------------
 
-static inline constexpr uint64_t bit_mask(int x) {
-  uint64_t t = 1;
+static constexpr uint64_t bit_mask(const int x) {
+  constexpr uint64_t t = 1;
   return (t << x) - 1;
 }
 
 // 类似verilog中的 x[hi:lo]
 template<int H, int L>
-static inline uint64_t bits(uint64_t x) {
-  return (x >> L) & bit_mask(H - L + 1);
+static uint64_t bits(const uint64_t x) {
+  return x >> L & bit_mask(H - L + 1);
 }
 
 #endif

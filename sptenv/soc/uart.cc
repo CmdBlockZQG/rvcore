@@ -1,36 +1,34 @@
+#include "utils.h"
 #include "uart.h"
 
-static const char *uart_input_ptr = " "
+static auto uart_input_ptr = " "
   "busybox | head -n4\n"
   "ls\n"
   "./hello\n";
 
-static inline bool input_available() {
+static bool input_available() {
   return *uart_input_ptr != '\0';
 }
 
-UART::UART(paddr_t addr): Device(addr, 0x1000) { }
+UART::UART(const paddr_t base): Device(base, 0x1000) { }
 
-UART::~UART() { }
+UART::~UART() = default;
 
-void UART::write(paddr_t addr, int len, word_t data) {
+void UART::write(const paddr_t addr, int len, const word_t data) {
   if (addr == 0) {
-    extern bool soc_mute;
-    if (!soc_mute) {
-      putchar(data & 0xff);
+    if (extern bool soc_mute; !soc_mute) {
+      putchar(static_cast<char>(data & 0xff));
       fflush(stdout);
     }
   }
 }
 
-word_t UART::read(paddr_t addr, int len) {
+word_t UART::read(const paddr_t addr, int len) {
   if (addr == 0) {
-    if (input_available()) {
-      return *uart_input_ptr++;
-    } else {
-      return 0xff;
-    }
-  } else if (addr == 5) {
+    if (input_available()) return *uart_input_ptr++;
+    return 0xff;
+  }
+  if (addr == 5) {
     return 0x60 | input_available();
   }
   return 0;

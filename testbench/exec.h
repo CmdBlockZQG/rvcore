@@ -1,7 +1,6 @@
-#ifndef __TESTBENCH_CPU_H__
-#define __TESTBENCH_CPU_H__
+#ifndef __TESTBENCH_EXEC_H__
+#define __TESTBENCH_EXEC_H__
 
-#include "common.h"
 #include "core.h"
 
 #include <memory>

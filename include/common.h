@@ -3,7 +3,6 @@
 
 #include "macro.h"
 #include "config.h"
-#include "utils.h"
 
 #include <cstdint>
 
@@ -28,5 +27,13 @@
 constexpr inline int gpr_n = MUXDEF(CONF_RVE, 16, 32);
 constexpr inline int xlen = MUXDEF(CONF_RV64, 64, 32);
 constexpr inline bool rt_check = ISDEF(CONF_RT_CHECK);
+
+enum {
+  CORE_ACT_NONE = 0,
+  CORE_ACT_SKIP,
+  CORE_ACT_ABORT,
+  CORE_ACT_GOOD_TRAP,
+  CORE_ACT_BAD_TRAP,
+};
 
 #endif

@@ -1,13 +1,11 @@
+#include "common.h"
+#include "utils.h"
 #include "cpu.h"
 
 #include <verilated_vcd_c.h>
 #include <string>
 
 VTop *top_module;
-
-int cpu_state = ST_RUNNING;
-vaddr_t cpu_pc;
-
 static VerilatedContext *contextp;
 static VerilatedVcdC *wave = nullptr;
 
@@ -55,11 +53,10 @@ int cpu_step() {
   while (true) {
     do_cycle();
     if (top_module->debugIO_ebreak) { // ebreak指令提交
-      return gpr(10) ? -1 : 1;
+      return gpr(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;
     }
     if (top_module->debugIO_commit) { // 一般指令提交
-      cpu_pc = top_module->debugIO_pc;
-      return 0;
+      return CORE_ACT_NONE;
     }
   }
 }

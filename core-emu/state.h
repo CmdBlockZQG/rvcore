@@ -45,10 +45,10 @@ class HartState {
     HartCSR csr;
     word_t priv;
 
-    vaddr_t get_pc();
+    vaddr_t get_pc() const;
     void set_pc(vaddr_t dnpc);
 
-    word_t gpr_read(int id);
+    word_t gpr_read(int id) const;
     void gpr_write(int id, word_t data);
 
     word_t csr_read(word_t addr);

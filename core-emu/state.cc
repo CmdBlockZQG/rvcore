@@ -1,4 +1,5 @@
 #include "common.h"
+#include "utils.h"
 
 #include "state.h"
 
@@ -9,9 +10,9 @@ HartState::HartState(int hart_id): csr(hart_id) {
   priv = PRIV_M;
 }
 
-HartState::~HartState() { }
+HartState::~HartState() = default;
 
-vaddr_t HartState::get_pc() {
+vaddr_t HartState::get_pc() const {
   return pc;
 }
 
@@ -19,25 +20,21 @@ void HartState::set_pc(vaddr_t dnpc) {
   pc = dnpc;
 }
 
-word_t HartState::gpr_read(int id) {
-  if constexpr (rt_check) {
-    assert(0 <= id && id < gpr_n);
-  }
+word_t HartState::gpr_read(const int id) const {
+  Check(0 <= id && id < gpr_n);
   return id ? gpr[id] : 0;
 }
 
-void HartState::gpr_write(int id, word_t data) {
-  if constexpr (rt_check) {
-    assert(0 <= id && id < gpr_n);
-  }
+void HartState::gpr_write(const int id, const word_t data) {
+  Check(0 <= id && id < gpr_n);
   if (id) gpr[id] = data;
 }
 
-HartCSR::HartCSR(int hart_id) {
+HartCSR::HartCSR(const int hart_id) {
   mhartid = hart_id;
 }
 
-word_t &HartState::addr_csr(word_t addr) {
+word_t &HartState::addr_csr(const word_t addr) {
   switch (addr & 0xfff) {
     // SRW
     case 0x105: return csr.stvec;
@@ -109,13 +106,11 @@ word_t HartState::csr_read(word_t addr) {
   }
 }
 
-void HartState::csr_write(word_t addr, word_t data) {
+void HartState::csr_write(const word_t addr, const word_t data) {
   // 检查CSR是否只读
-  word_t csr_flag = bits<11, 10>(addr);
-  if (csr_flag == 0b11) throw 0;
+  if (const word_t csr_flag = bits<11, 10>(addr); csr_flag == 0b11) throw 0;
   // 检查当前特权级是否能访问CSR
-  word_t csr_priv = bits<9, 8>(addr);
-  if (priv < csr_priv) throw 0;
+  if (const word_t csr_priv = bits<9, 8>(addr); priv < csr_priv) throw 0;
 
   switch (addr) {
     // sstatus写入实际上是在写入mstatus的子集

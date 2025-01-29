@@ -57,9 +57,9 @@ int cpu_step() {
     do_cycle();
   }
   switch (cpu_state) {
-    case ST_STOP: return 0;
-    case ST_HALT: return 1;
-    case ST_ABORT: return -1;
+    case ST_STOP: return CORE_ACT_NONE;
+    case ST_HALT: return CORE_ACT_GOOD_TRAP;
+    case ST_ABORT: return CORE_ACT_BAD_TRAP;
     default: assert(0);
   }
 }

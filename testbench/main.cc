@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "cpu.h"
+#include "exec.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -11,8 +11,8 @@ static char *img_file = nullptr;
 
 static bool gdb_remote = false;
 
-static void parse_args(int argc, char *argv[]) {
-  const struct option table[] = {
+static void parse_args(const int argc, char *argv[]) {
+  const option table[] = {
     {"core"   , required_argument, nullptr, 'c'},
     {"gdb"    , no_argument      , nullptr, 'g'},
     {"log"    , required_argument, nullptr, 'l'},
@@ -37,7 +37,7 @@ static void parse_args(int argc, char *argv[]) {
   }
 }
 
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
   parse_args(argc, argv);
 
   init_log(log_file);

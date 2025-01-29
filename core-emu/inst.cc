@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-static inline sword_t sgn(word_t x) {
+static sword_t sgn(word_t x) {
   return *reinterpret_cast<sword_t *>(&x);
 }
 
@@ -218,7 +218,7 @@ void Hart::do_inst() {
       case 0b101: jump_en = (sgn(src1) >= sgn(src2)); break;
       case 0b110: jump_en = (src1 < src2); break;
       case 0b111: jump_en = (src1 >= src2); break;
-      default: if constexpr (rt_check) assert(0);
+      default: Check(0);
     }
 
     if (jump_en) {
@@ -234,7 +234,7 @@ void Hart::do_inst() {
       case 0b010: data = sext<32>(vaddr_load(addr, 4)); break;
       case 0b100: data = vaddr_load(addr, 1); break;
       case 0b101: data = vaddr_load(addr, 2); break;
-      default: if constexpr (rt_check) assert(0);
+      default: Check(0);
     }
 
     gpr_write(rd(inst), data);
@@ -246,7 +246,7 @@ void Hart::do_inst() {
       case 0b000: vaddr_store(addr, 1, data); break;
       case 0b001: vaddr_store(addr, 2, data); break;
       case 0b010: vaddr_store(addr, 4, data); break;
-      default: if constexpr (rt_check) assert(0);
+      default: Check(0);
     }
   } else if (op == 0b00100) { // CALRI
     word_t src1 = gpr_read(rs1(inst));
@@ -261,17 +261,17 @@ void Hart::do_inst() {
       case 0b110: res = src1 | imm; break;
       case 0b111: res = src1 & imm; break;
       case 0b001:
-        if constexpr (rt_check) assert(funct7(inst) == 0);
+        Check(funct7(inst) == 0);
         res = src1 << imm;
       break;
       case 0b101:
         switch (funct7(inst)) {
           case 0b0000000: res = src1 >> imm; break;
           case 0b0100000: res = sgn(src1) >> (imm & bit_mask(5)); break;
-          default: if constexpr (rt_check) assert(0);
+          default: Check(0);
         }
       break;
-      default: if constexpr (rt_check) assert(0);
+      default: Check(0);
     }
 
     gpr_write(rd(inst), res);
@@ -282,7 +282,7 @@ void Hart::do_inst() {
     word_t src1 = gpr_read(rs1(inst)), src2 = gpr_read(rs2(inst));
     word_t res = 0;
     if (f7 & 1) { // RV32M
-      if constexpr (rt_check) assert(f7 == 1);
+      Check(f7 == 1);
       switch (f3) {
         case 0b000: res = src1 * src2; break;
         case 0b001: res = (static_cast<int64_t>(sgn(src1)) * static_cast<int64_t>(sgn(src2))) >> 32; break;
@@ -306,7 +306,7 @@ void Hart::do_inst() {
           if (src2) res = src1 % src2;
           else res = src1;
         break;
-        default: if constexpr (rt_check) assert(0);
+        default: Check(0);
       }
     } else {
       switch (f3) {
@@ -314,41 +314,41 @@ void Hart::do_inst() {
           switch (f7) {
             case 0b0000000: res = src1 + src2; break;
             case 0b0100000: res = src1 - src2; break;
-            default: if constexpr (rt_check) assert(0);
+            default: Check(0);
           }
         break;
         case 0b001: // sll
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = src1 << (src2 & bit_mask(5));
         break;
         case 0b010: // slt
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = sgn(src1) < sgn(src2);
         break;
         case 0b011: // sltu
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = src1 < src2;
         break;
         case 0b100: // xor
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = src1 ^ src2;
         break;
         case 0b101: // srl sra
           switch (f7) {
             case 0b0000000: res = src1 >> (src2 & bit_mask(5)); break;
             case 0b0100000: res = sgn(src1) >> (src2 & bit_mask(5)); break;
-            default: if constexpr (rt_check) assert(0);
+            default: Check(0);
           }
         break;
         case 0b110: // or
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = src1 | src2;
         break;
         case 0b111: // and
-          if constexpr (rt_check) assert(f7 == 0);
+          Check(f7 == 0);
           res = src1 & src2;
         break;
-        default: if constexpr (rt_check) assert(0);
+        default: Check(0);
       }
     }
 
@@ -377,7 +377,7 @@ void Hart::do_inst() {
         case 0b01: csr_wdata = opnd; break;
         case 0b10: csr_wdata = csr_rdata | opnd; break;
         case 0b11: csr_wdata = csr_rdata & ~opnd; break;
-        default: if constexpr (rt_check) assert(0);
+        default: Check(0);
       }
 
       if (csr_wdata != csr_rdata) { // CSR写入
@@ -412,7 +412,7 @@ void Hart::do_inst() {
           // 若mstatus.MPP不为M模式，将mstatus_MPRV设为0
           if (mstatus_MPP != 0b11) csr.mstatus = (csr.mstatus & ~(1 << 17));
           // 将mstatus.MPP设为U模式，即0
-          csr.mstatus = (csr.mstatus & ~(0b11 << 11));
+          csr.mstatus = csr.mstatus & ~(0b11 << 11);
         break;
         // sret
         case 0x10200073:
@@ -427,9 +427,9 @@ void Hart::do_inst() {
           // 将特权级设置为mstatus.SPP
           priv = mstatus_SPP;
           // 若mstatus.SPP不为M模式（总是成立），将mstatus_MPRV设为0
-          csr.mstatus = (csr.mstatus & ~(1 << 17));
+          csr.mstatus = csr.mstatus & ~(1 << 17);
           // 将mstatus.SPP设为U模式，即0
-          csr.mstatus = (csr.mstatus & ~(1 << 8));
+          csr.mstatus = csr.mstatus & ~(1 << 8);
         break;
         // wfi
         case 0x10500073:
@@ -437,7 +437,7 @@ void Hart::do_inst() {
           if (mstatus_TW && priv == PRIV_U) throw EXC_II;
           // 否则nop
         break;
-        default: if constexpr (rt_check) assert(0);
+        default: Check(0);
       }
     }
   } else if (op == 0b00011) { // FENCE

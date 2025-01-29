@@ -1,13 +1,13 @@
 #include "device.h"
 
-Device::Device(paddr_t base, paddr_t size): base(base), size(size) { }
+Device::Device(const paddr_t base, const paddr_t size): base(base), size(size) { }
 
-Device::~Device() { }
+Device::~Device() = default;
 
-bool Device::in(paddr_t addr) {
+bool Device::in(const paddr_t addr) const {
   return base <= addr && addr < base + size;
 }
 
-paddr_t Device::get_base() {
+paddr_t Device::get_base() const {
   return base;
 }

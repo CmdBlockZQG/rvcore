@@ -10,4 +10,5 @@
 !README.md
 !xmake.lua
 !Makefile
+build/
 verilated_obj/

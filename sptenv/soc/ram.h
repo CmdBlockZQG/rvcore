@@ -4,16 +4,15 @@
 #include "device.h"
 
 class RAM final : public Device {
-  private:
-    uint8_t *ptr;
+  uint8_t *ptr;
   public:
     RAM(paddr_t base, paddr_t size);
-    virtual ~RAM() override;
+    ~RAM() override;
 
-    virtual void write(paddr_t addr, int len, word_t data) override;
-    virtual word_t read(paddr_t addr, int len) override;
+    void write(paddr_t addr, int len, word_t data) override;
+    word_t read(paddr_t addr, int len) override;
 
-    void *get_ptr(paddr_t addr);
+    [[nodiscard]] void *get_ptr(paddr_t addr) const;
 };
 
 #endif

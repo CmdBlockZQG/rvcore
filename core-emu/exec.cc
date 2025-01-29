@@ -1,5 +1,6 @@
 #include "hart.h"
 #include "soc.h"
+#include "utils.h"
 
 #include "decode.h"
 #include "misc.h"
@@ -31,7 +32,7 @@ int Hart::step() {
           break;
         }
       }
-      if constexpr (rt_check) assert(f);
+      Check(f);
     } else if (si && ((priv == PRIV_S && mstatus_SIE) || priv < PRIV_S)) {
       bool f = false;
       for (word_t i : {9, 1, 5}) {
@@ -41,7 +42,7 @@ int Hart::step() {
           break;
         }
       }
-      if constexpr (rt_check) assert(f);
+      Check(f);
     }
   } catch (Exception &e) { // 同步异常
     // Log("Exception: %d, 0x%08x, at pc=0x%08x", e.cause, e.tval, get_pc());
@@ -61,13 +62,13 @@ int Hart::step() {
     if constexpr (ISDEF(CONF_AM)) {
       if (e.cause == 3) { // ebreak
         // -1表示非正常退出，1表示正常结束
-        return gpr_read(10) ? -1 : 1;
+        return gpr_read(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;
       }
     }
   }
 
   csr.counter += 1;
-  return 0;
+  return CORE_ACT_NONE;
 }
 
 // trap到M模式异常处理程序
@@ -92,7 +93,7 @@ void Hart::mtrap(word_t mcause, word_t mtval) {
 
 // trap到S模式异常处理程序
 void Hart::strap(word_t scause, word_t stval) {
-  if constexpr (rt_check) assert(priv <= PRIV_S); 
+  Check(priv <= PRIV_S);
   csr.scause = scause;
   csr.sepc = get_pc();
   csr.stval = stval;

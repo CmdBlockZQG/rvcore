@@ -12,8 +12,8 @@ class Device {
     Device(paddr_t base, paddr_t size);
     virtual ~Device() = 0;
 
-    bool in(paddr_t addr);
-    paddr_t get_base();
+    [[nodiscard]] bool in(paddr_t addr) const;
+    [[nodiscard]] paddr_t get_base() const;
 
     virtual void write(paddr_t addr, int len, word_t data) = 0;
     virtual word_t read(paddr_t addr, int len) = 0;
