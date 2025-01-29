@@ -22,6 +22,8 @@ static constexpr Device *devices[] = {
   &plic
 };
 
+bool soc_mute = false;
+
 static void load_img(const char *filename) {
   if (filename) {
     FILE *fp = fopen(filename, "rb");
@@ -30,7 +32,7 @@ static void load_img(const char *filename) {
     fseek(fp, 0, SEEK_END);
     const long size = ftell(fp);
 
-    Log("Image file %s, size = %ld", filename, size);
+    if (!soc_mute) Log("Image file %s, size = %ld", filename, size);
 
     fseek(fp, 0, SEEK_SET);
     assert(fread(mem.get_ptr(CONF_RESET_VEC), size, 1, fp) == 1);
@@ -46,12 +48,9 @@ static void load_img(const char *filename) {
       0xdeadbeef  // some data
     };
     memcpy(mem.get_ptr(CONF_RESET_VEC), img, sizeof(img));
-    Log("No image is given. Use the default built-in image.");
+    if (!soc_mute) Log("No image is given. Use the default built-in image.");
   }
 }
-
-
-bool soc_mute = false;
 
 void init_soc(const char *imgfile, const bool mute) {
   soc_mute = mute;

@@ -3,7 +3,7 @@
 
 #include "state.h"
 
-HartState::HartState(int hart_id): csr(hart_id) {
+HartState::HartState(const int hart_id): csr(hart_id) {
   pc = CONF_RESET_VEC;
   gpr[0] = 0;
 
@@ -16,7 +16,7 @@ vaddr_t HartState::get_pc() const {
   return pc;
 }
 
-void HartState::set_pc(vaddr_t dnpc) {
+void HartState::set_pc(const vaddr_t dnpc) {
   pc = dnpc;
 }
 

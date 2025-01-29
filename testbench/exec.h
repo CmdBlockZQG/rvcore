@@ -3,9 +3,7 @@
 
 #include "core.h"
 
-#include <memory>
-
-extern std::unique_ptr<Core> dut;
+extern Core *dut;
 
 int cpu_exec();
 

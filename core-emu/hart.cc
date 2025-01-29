@@ -5,14 +5,28 @@
 #include "decode.h"
 #include "misc.h"
 
-Hart::Hart(int id): HartState(id) { }
+Hart::Hart(const int id): HartState(id) { }
 
-Hart::~Hart() { }
+Hart::~Hart() = default;
 
-paddr_t Hart::mmu_translate(vaddr_t vaddr, int acs) {
-  word_t satp = csr.satp;
+void Hart::difftest_get(difftest_ctx_t *ctx) const {
+  ctx->pc = get_pc();
+  for (int i = 0; i < gpr_n; ++i) {
+    ctx->gpr[i] = gpr_read(i);
+  }
+}
+
+void Hart::difftest_set(const difftest_ctx_t *ctx) {
+  set_pc(ctx->pc);
+  for (int i = 0; i < gpr_n; ++i) {
+    gpr_write(i, ctx->gpr[i]);
+  }
+}
+
+paddr_t Hart::mmu_translate(const vaddr_t vaddr, const int acs) const {
+  const word_t satp = csr.satp;
   // MPRV=1时，load&store使用mstatus.MPP特权级
-  word_t act_priv = mstatus_MPRV && (acs != ACS_INST) ? mstatus_MPP : priv;
+  const word_t act_priv = mstatus_MPRV && (acs != ACS_INST) ? mstatus_MPP : priv;
   if (act_priv == PRIV_M || !(satp >> 31)) return vaddr;
 
   // page fault在不同访问时的cause编号
@@ -26,8 +40,8 @@ paddr_t Hart::mmu_translate(vaddr_t vaddr, int acs) {
   constexpr int vpn_off[] = {12, 22};
 
   paddr_t pt_addr = satp << 12;
-  word_t pte;
-  int i = 1;
+  word_t pte = 0;
+  int i;
   for (i = 1; i >= 0; --i) {
     const paddr_t vpn = (vaddr >> vpn_off[i]) & 0x3ff;
     const paddr_t pte_addr = pt_addr | (vpn << 2);

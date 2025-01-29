@@ -4,6 +4,14 @@
 #include <cstring>
 #include <dlfcn.h>
 
+#define LOAD_FUNC(name) \
+  name = reinterpret_cast<decltype(name)>(dlsym(handle, #name)); \
+  assert(name);
+
+#define MAP_FUNCS(_) \
+  _(core_init) _(core_step) _(core_exit) \
+  _(difftest_get) _(difftest_set)
+
 Core::Core(const char *name) {
   char so_filename[64] = "build/libcore-";
   strcat(so_filename, name);
@@ -11,12 +19,5 @@ Core::Core(const char *name) {
   void *handle = dlopen(so_filename, RTLD_LAZY);
   Assert(handle, "Failed to open so file '%s'", so_filename);
 
-  Log("Current core: %s", name);
-
-  init = reinterpret_cast<decltype(init)>(dlsym(handle, "core_init"));
-  assert(init);
-  step = reinterpret_cast<decltype(step)>(dlsym(handle, "core_step"));
-  assert(step);
-  exit = reinterpret_cast<decltype(exit)>(dlsym(handle, "core_exit"));
-  assert(exit);
+  MAP_FUNCS(LOAD_FUNC)
 }

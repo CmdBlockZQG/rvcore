@@ -3,8 +3,9 @@ ARGS ?= --log=build
 
 #CORE = emu
 CORE = rtl-b
+REF = emu
 
-override ARGS += --core=$(CORE)
+override ARGS += --core=$(CORE) --diff=$(REF)
 
 clean:
 	xmake clean
@@ -13,11 +14,15 @@ clean:
 cdb:
 	xmake project -k compile_commands
 
+$(REF):
+	cd core-$(REF) && make
+	xmake build core-$(REF)
+
 $(CORE):
 	cd core-$(CORE) && make
 	xmake build core-$(CORE)
 
-build: $(CORE)
+build: $(CORE) $(REF)
 	xmake build testbench
 
 run:

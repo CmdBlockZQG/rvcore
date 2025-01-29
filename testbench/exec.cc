@@ -2,16 +2,17 @@
 #include "utils.h"
 
 #include "exec.h"
+#include "difftest.h"
 
-std::unique_ptr<Core> dut;
+Core *dut;
 
 int cpu_exec() {
   int ret;
   while (true) {
     try {
-      ret = dut->step();
+      ret = difftest_step();
     } catch (...) {
-      ret = CORE_ACT_SKIP;
+      ret = CORE_ACT_ABORT;
     }
     switch (ret) {
       case CORE_ACT_NONE:
@@ -32,6 +33,7 @@ int cpu_exec() {
     }
     break;
   }
-  dut->exit();
+  dut->core_exit();
+  difftest_exit();
   return ret != CORE_ACT_GOOD_TRAP;
 }

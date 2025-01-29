@@ -27,28 +27,27 @@ class HartCSR {
 
     uint64_t counter = 0; // time cycle instret
 
-    HartCSR(int hart_id);
+    explicit HartCSR(int hart_id);
 };
 
 // 硬件线程状态
 class HartState {
-  private:
-    vaddr_t pc;
-    word_t gpr[MUXDEF(CONF_RVE, 16, 32)];
+  vaddr_t pc;
+  word_t gpr[gpr_n];
 
-    word_t &addr_csr(word_t addr);
+  word_t &addr_csr(word_t addr);
   
   public:
-    HartState(int hart_id);
+    explicit HartState(int hart_id);
     ~HartState();
 
     HartCSR csr;
     word_t priv;
 
-    vaddr_t get_pc() const;
+    [[nodiscard]] vaddr_t get_pc() const;
     void set_pc(vaddr_t dnpc);
 
-    word_t gpr_read(int id) const;
+    [[nodiscard]] word_t gpr_read(int id) const;
     void gpr_write(int id, word_t data);
 
     word_t csr_read(word_t addr);

@@ -1,11 +1,16 @@
 #ifndef __TESTBENCH_CORE_H__
 #define __TESTBENCH_CORE_H__
 
+#include "difftest.h"
+
 class Core {
   public:
-    void (*init)(const char *img_file, bool mute);
-    int (*step)();
-    void (*exit)();
+    void (*core_init)(const char *img_file, bool mute);
+    int (*core_step)();
+    void (*core_exit)();
+
+    void (*difftest_get)(difftest_ctx_t *ctx);
+    void (*difftest_set)(const difftest_ctx_t *ctx);
 
     explicit Core(const char *name);
 };
