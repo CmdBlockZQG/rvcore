@@ -9,8 +9,8 @@
 // 硬件线程
 class Hart : HartState {
   [[nodiscard]] paddr_t mmu_translate(vaddr_t vaddr, int acs) const;
-  void vaddr_store(vaddr_t vaddr, int len, word_t data);
-  word_t vaddr_load(vaddr_t vaddr, int len);
+  void vaddr_store(vaddr_t vaddr, int len, word_t data) const;
+  [[nodiscard]] word_t vaddr_load(vaddr_t vaddr, int len) const;
 
   word_t inst_fetch();
   void do_inst();

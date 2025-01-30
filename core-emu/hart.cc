@@ -115,23 +115,25 @@ paddr_t Hart::mmu_translate(const vaddr_t vaddr, const int acs) const {
   return paddr;
 }
 
-void Hart::vaddr_store(vaddr_t vaddr, int len, word_t data) {
+void Hart::vaddr_store(const vaddr_t vaddr, const int len, const word_t data) const {
   if (vaddr & (len - 1)) throw Exception {6, vaddr};
   word_t paddr = mmu_translate(vaddr, ACS_STORE);
   try {
     paddr_write(paddr, len, data);
   } catch (...) {
+    assert(0);
     throw Exception {7, vaddr};
   }
 }
 
-word_t Hart::vaddr_load(vaddr_t vaddr, int len) {
+word_t Hart::vaddr_load(const vaddr_t vaddr, const int len) const {
   if (vaddr & (len - 1)) throw Exception {4, vaddr};
   word_t paddr = mmu_translate(vaddr, ACS_LOAD);
   word_t data;
   try {
     data = paddr_read(paddr, len);
   } catch (...) {
+    assert(0);
     throw Exception {5, vaddr};
   }
   return data;

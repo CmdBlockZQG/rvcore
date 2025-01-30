@@ -65,7 +65,7 @@ void paddr_write(const paddr_t addr, const int len, const word_t data) {
     }
   }
   Log("Writing invalid paddr: " FMT_PADDR, addr);
-  assert(0);
+  throw 0;
 }
 
 word_t paddr_read(const paddr_t addr, const int len) {
@@ -75,7 +75,7 @@ word_t paddr_read(const paddr_t addr, const int len) {
     }
   }
   Log("Reading invalid paddr: " FMT_PADDR, addr);
-  assert(0);
+  throw 0;
 }
 
 word_t soc_get_mip() {

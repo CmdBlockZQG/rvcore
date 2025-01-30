@@ -12,3 +12,4 @@
 !Makefile
 build/
 verilated_obj/
+core-rtl-b/Top.sv

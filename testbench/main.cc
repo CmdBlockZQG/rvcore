@@ -47,7 +47,8 @@ int main(const int argc, char *argv[]) {
   init_log(log_file);
   Assert(core_name, "No core specified!");
   dut = new Core(core_name);
-  
+  Log("Core loaded: " ANSI_FMT("%s", ANSI_FG_CYAN), core_name);
+
   dut->core_init(img_file, false);
   if (diff_core_name) difftest_init(diff_core_name, img_file);
 

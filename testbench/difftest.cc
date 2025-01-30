@@ -32,7 +32,7 @@ void difftest_init(const char *core_name, const char *img_file) {
   dut->difftest_get(&ctx);
   ref->difftest_set(&ctx);
 
-  Log("difftest ref: " ANSI_FMT("%s", ANSI_FG_GREEN), core_name);
+  Log("Difftest ref: " ANSI_FMT("%s", ANSI_FG_MAGENTA), core_name);
 }
 
 int difftest_step() {
