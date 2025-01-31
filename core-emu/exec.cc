@@ -12,7 +12,7 @@ Exception::Exception(word_t cause, word_t tval): cause(cause), tval(tval) { }
 // 返回0表示执行尚未结束
 int Hart::step() {
   // 根据中断信号更新mip
-  word_t mip_i = soc_get_mip();
+  const word_t mip_i = soc_get_mip();
   csr.mip = (csr.mip & ~0x888) | mip_i;
 
   try {
@@ -25,7 +25,7 @@ int Hart::step() {
     word_t si = csr.mip & csr.mie & csr.mideleg;
     if (mi && ((priv == PRIV_M && mstatus_MIE) || priv < PRIV_M)) {
       bool f = false;
-      for (word_t i : {11, 3, 7, 9, 1, 5}) {
+      for (const word_t i : {11, 3, 7, 9, 1, 5}) {
         if ((mi >> i) & 1) {
           f = true;
           mtrap(i | flag_intr, 0);

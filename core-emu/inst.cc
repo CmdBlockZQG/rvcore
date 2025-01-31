@@ -16,7 +16,7 @@ void Hart::do_inst() {
   const inst_t inst = inst_fetch();
 
   //  Illegal instruction 非法指令异常
-  #define EXC_II ((Exception {2, inst}))
+  #define EXC_II ((Exception {2, 0}))
 
   // C拓展压缩指令
   if (inst_t c_op = c_opcode(inst); c_op != 0b11) {
@@ -165,7 +165,7 @@ void Hart::do_inst() {
         inst_t rs2 = bits<6, 2>(inst);
         if (bits<12, 12>(inst)) {
           // c.ebreak
-          if (rs1 == 0 && rs2 == 0) throw Exception {3, 0};
+          if (rs1 == 0 && rs2 == 0) throw Exception {3, pc};
           if (rs2 == 0) { // c.jalr
             word_t src1 = gpr_read(rs1);
             dnpc = src1 & ~1;
@@ -398,7 +398,7 @@ void Hart::do_inst() {
         // ecall
         case 0x00000073: throw Exception {8 | priv, 0};
         // ebreak
-        case 0x00100073: throw Exception {3, 0};
+        case 0x00100073: throw Exception {3, pc};
         // mret
         case 0x30200073:
           if (priv < PRIV_M) throw EXC_II;

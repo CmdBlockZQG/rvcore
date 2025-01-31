@@ -5,7 +5,10 @@ ARGS ?= --log=build
 CORE = rtl-b
 REF = emu
 
-override ARGS += --core=$(CORE) --diff=$(REF)
+override ARGS += --core=$(CORE)
+ifdef REF
+override ARGS += --diff=$(REF)
+endif
 
 clean:
 	xmake clean
