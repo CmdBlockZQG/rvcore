@@ -14,6 +14,7 @@ void Hart::do_inst() {
   const vaddr_t pc = get_pc();
   vaddr_t dnpc = pc;
   const inst_t inst = inst_fetch();
+  last_inst = inst;
 
   //  Illegal instruction 非法指令异常
   #define EXC_II ((Exception {2, 0}))

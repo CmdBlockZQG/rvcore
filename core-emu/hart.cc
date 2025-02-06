@@ -11,6 +11,7 @@ Hart::~Hart() = default;
 
 void Hart::difftest_get(difftest_ctx_t *ctx) const {
   ctx->pc = get_pc();
+  ctx->inst = last_inst;
   for (int i = 0; i < gpr_n; ++i) {
     ctx->gpr[i] = gpr_read(i);
   }
@@ -95,12 +96,13 @@ paddr_t Hart::mmu_translate(const vaddr_t vaddr, const int acs) const {
     word_t pte_up = pte | (1 << 6); // 将A位设为1
     if (acs == ACS_STORE) pte_up |= 1 << 7; // store则将D位设为1
     if (pte_up != pte) { // 更新页表项
-      try {
-        paddr_write(pte_addr, 4, pte_up);
-      } catch (...) {
-        // 读取时没有触发access fault，写入时也不应该 
-        assert(0);
-      }
+      // try {
+      //   paddr_write(pte_addr, 4, pte_up);
+      // } catch (...) {
+      //   // 读取时没有触发access fault，写入时也不应该
+      //   assert(0);
+      // }
+      throw EXC_PF;
     }
     break; // 地址翻译成功完成
   }

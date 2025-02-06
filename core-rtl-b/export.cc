@@ -25,6 +25,7 @@ extern "C" {
       _(16) _(17) _(18) _(19) _(20) _(21) _(22) _(23) \
       _(24) _(25) _(26) _(27) _(28) _(29) _(30) _(31)
     ctx->pc = top_module->debugIO_dnpc;
+    ctx->inst = top_module->debugIO_inst;
     ctx->gpr[0] = 0;
     MAP_GPR(GET_GPR);
   }

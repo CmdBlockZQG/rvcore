@@ -52,6 +52,8 @@ class HartState {
 
     word_t csr_read(word_t addr);
     void csr_write(word_t addr, word_t data);
+
+    word_t last_inst;
 };
 
 #endif
