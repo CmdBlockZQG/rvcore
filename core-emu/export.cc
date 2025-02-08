@@ -17,6 +17,9 @@ extern "C" {
   __EXPORT void core_exit() {
   }
 
+  __EXPORT void core_stat() {
+  }
+
   __EXPORT void difftest_get(difftest_ctx_t *ctx) {
     cpu.difftest_get(ctx);
   }

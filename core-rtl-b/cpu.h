@@ -10,5 +10,6 @@ extern VTop *top_module;
 void cpu_init();
 int cpu_step();
 void cpu_exit();
+void cpu_stat();
 
 #endif

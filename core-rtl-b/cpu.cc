@@ -9,6 +9,9 @@ VTop *top_module;
 static VerilatedContext *contextp;
 static VerilatedVcdC *wave = nullptr;
 
+static long tot_cycle = 0;
+static long tot_inst = 0;
+
 static void init_wave() {
   extern std::string log_dir;
   const std::string wave_filename = log_dir + "rtl-b-wave.vcd";
@@ -27,6 +30,7 @@ static void do_eval() {
 }
 
 static void do_cycle() {
+  tot_cycle++;
   top_module->clock = 0; do_eval();
   top_module->clock = 1; do_eval();
 }
@@ -50,6 +54,7 @@ void cpu_init() {
 }
 
 int cpu_step() {
+  tot_inst++;
   while (true) {
     do_cycle();
     if (top_module->debugIO_ebreak) { // ebreak指令提交
@@ -65,4 +70,10 @@ void cpu_exit() {
   if (wave) wave->close();
   delete top_module;
   delete contextp;
+}
+
+void cpu_stat() {
+  Log("Total cycles: %ld", tot_cycle);
+  Log("Total instructions: %ld", tot_inst);
+  Log("Total IPC: %.2f", static_cast<double>(tot_inst) / tot_cycle);
 }

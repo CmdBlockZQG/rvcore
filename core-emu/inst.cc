@@ -465,6 +465,7 @@ void Hart::do_inst() {
     } else { // AMO
       word_t src2 = gpr_read(rs2(inst));
       word_t paddr = mmu_translate(vaddr, ACS_STORE);
+      if (vaddr & 0b11) throw Exception {6, vaddr};
       word_t t;
       try {
         t = paddr_read(paddr, 4);

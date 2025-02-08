@@ -34,6 +34,7 @@ int cpu_exec() {
     break;
   }
   dut->core_exit();
+  dut->core_stat();
   difftest_exit();
   return ret != CORE_ACT_GOOD_TRAP;
 }

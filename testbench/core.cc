@@ -9,7 +9,7 @@
   assert(name);
 
 #define MAP_FUNCS(_) \
-  _(core_init) _(core_step) _(core_exit) \
+  _(core_init) _(core_step) _(core_exit) _(core_stat) \
   _(difftest_get) _(difftest_set)
 
 Core::Core(const char *name) {
