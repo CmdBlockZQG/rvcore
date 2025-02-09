@@ -11,7 +11,6 @@ Hart::~Hart() = default;
 
 void Hart::difftest_get(difftest_ctx_t *ctx) const {
   ctx->pc = get_pc();
-  ctx->inst = last_inst;
   for (int i = 0; i < gpr_n; ++i) {
     ctx->gpr[i] = gpr_read(i);
   }

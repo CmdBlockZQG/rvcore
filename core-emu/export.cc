@@ -20,6 +20,9 @@ extern "C" {
   __EXPORT void core_stat() {
   }
 
+  __EXPORT void trace_start() {
+  }
+
   __EXPORT void difftest_get(difftest_ctx_t *ctx) {
     cpu.difftest_get(ctx);
   }

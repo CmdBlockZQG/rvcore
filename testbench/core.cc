@@ -10,7 +10,7 @@
 
 #define MAP_FUNCS(_) \
   _(core_init) _(core_step) _(core_exit) _(core_stat) \
-  _(difftest_get) _(difftest_set)
+  _(trace_start) _(difftest_get) _(difftest_set)
 
 Core::Core(const char *name) {
   char so_filename[64] = "build/libcore-";

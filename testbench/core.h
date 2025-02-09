@@ -10,6 +10,7 @@ class Core {
     void (*core_exit)();
     void (*core_stat)();
 
+    void (*trace_start)();
     void (*difftest_get)(difftest_ctx_t *ctx);
     void (*difftest_set)(const difftest_ctx_t *ctx);
 

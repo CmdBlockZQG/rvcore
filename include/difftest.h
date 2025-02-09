@@ -6,7 +6,6 @@
 struct difftest_ctx_t {
   word_t gpr[32];
   vaddr_t pc;
-  word_t inst;
 };
 
 void difftest_init(const char *core_name, const char *img_file);

@@ -6,16 +6,16 @@
 #include <string>
 
 VTop *top_module;
-static VerilatedContext *contextp;
+static VerilatedContext *contextp = nullptr;
 static VerilatedVcdC *wave = nullptr;
 
 static long tot_cycle = 0;
 static long tot_inst = 0;
 
-static void init_wave() {
+void init_wave() {
   extern std::string log_dir;
   const std::string wave_filename = log_dir + "rtl-b-wave.vcd";
-  Verilated::traceEverOn(true);
+  contextp->traceEverOn(true);
   wave = new VerilatedVcdC;
   top_module->trace(wave, 99);
   wave->open(wave_filename.c_str());
@@ -25,8 +25,10 @@ static void init_wave() {
 
 static void do_eval() {
   top_module->eval();
-  contextp->timeInc(1);
-  if (wave) wave->dump(contextp->time());
+  if (wave) {
+    contextp->timeInc(1);
+    wave->dump(contextp->time());
+  }
 }
 
 static void do_cycle() {
@@ -37,12 +39,7 @@ static void do_cycle() {
 
 void cpu_init() {
   contextp = new VerilatedContext;
-  contextp->commandArgs(0, static_cast<char **>(nullptr));
-  top_module = new VTop(contextp, "top");
-
-  if constexpr (ISDEF(CONF_WAVE)) {
-    init_wave();
-  }
+  top_module = new VTop(contextp, "Top");
 
   top_module->reset = 1;
   int n = 20;
@@ -69,7 +66,8 @@ int cpu_step() {
 void cpu_exit() {
   if (wave) wave->close();
   delete top_module;
-  delete contextp;
+  // TODO: 在子进程中delete contextp会导致卡死
+  // delete contextp;
 }
 
 void cpu_stat() {

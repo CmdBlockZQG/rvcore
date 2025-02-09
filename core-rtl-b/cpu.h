@@ -12,4 +12,6 @@ int cpu_step();
 void cpu_exit();
 void cpu_stat();
 
+void init_wave();
+
 #endif

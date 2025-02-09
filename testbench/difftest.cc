@@ -25,7 +25,6 @@ static void diff_line(const char *name, const uint32_t ref, const uint32_t dut) 
 static void difftest_fail(const difftest_ctx_t *ctx_ref, const difftest_ctx_t *ctx_dut) {
   Log("Difftest failed, state diff as follows:");
   _Log("%-10s %-10s %-10s\n", "", "  ref", "  dut");
-  diff_line("inst", ctx_ref->inst, ctx_dut->inst);
   diff_line("pc", ctx_ref->pc, ctx_dut->pc);
   for (int i = 0; i < gpr_n; i++) {
     diff_line(gpr_name[i], ctx_ref->gpr[i], ctx_dut->gpr[i]);

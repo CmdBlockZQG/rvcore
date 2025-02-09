@@ -8,6 +8,6 @@
 // #define CONF_RVE 1
 #define CONF_RESET_VEC 0x80000000 // PC初始值
 
-// #define CONF_WAVE 1
+#define CONF_LIGHTSSS 1
 
 #endif

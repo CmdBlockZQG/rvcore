@@ -7,7 +7,7 @@ REF = emu
 
 override ARGS += --core=$(CORE)
 ifdef REF
-override ARGS += --diff=$(REF)
+override ARGS += --ref=$(REF)
 endif
 
 clean:
