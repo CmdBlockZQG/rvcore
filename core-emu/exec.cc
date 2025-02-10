@@ -12,8 +12,8 @@ Exception::Exception(word_t cause, word_t tval): cause(cause), tval(tval) { }
 // 返回0表示执行尚未结束
 int Hart::step() {
   // 根据中断信号更新mip
-  const word_t mip_i = soc_get_mip();
-  csr.mip = (csr.mip & ~0x888) | mip_i;
+  // const word_t mip_i = soc_get_mip();
+  // csr.mip = (csr.mip & ~0x888) | mip_i;
 
   try {
     // 执行指令
@@ -59,7 +59,7 @@ int Hart::step() {
       }
     }
     
-    if constexpr (ISDEF(CONF_AM)) {
+    if constexpr (ISDEF(CONF_TRAP)) {
       if (e.cause == 3) { // ebreak
         // -1表示非正常退出，1表示正常结束
         return gpr_read(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;

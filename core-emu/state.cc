@@ -100,7 +100,7 @@ word_t HartState::csr_read(word_t addr) {
     // mimpid
     case 0xf13: return 0;
     // mconfigptr
-    case 0xF15: return 0;
+    case 0xf15: return 0;
 
     default: return addr_csr(addr);
   }

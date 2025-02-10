@@ -1,6 +1,6 @@
 # RVCORE
 
-CmdBlock的RISC-V处理器核
+CmdBlock的RISC-V处理器核测试平台，包含模拟器GoldenModel实现
 
 ## 子模块说明
 
@@ -20,18 +20,20 @@ CmdBlock的RISC-V处理器核
   - 处理器核实现，以及实现相关的工具
     - 处理器核本身
     - 性能计数器
-    - difftest ref/dut (TODO)
+    - difftest ref/dut
     - 实现相关的trace工具
   - `core-emu`：软件ISA模拟器实现
-  - `core-rtl-a`：简单短流水线rtl实现 (TODO)
+  - `core-rtl-a`：简单短流水线rtl实现
+  - `core-rtl-b`：RV32-S7-F的rtl实现，仅包含驱动部分
 - `testbench`
   - 测试平台，驱动core运行
-    - difftest monitor (TODO)
-    - sdb - Simple Debugger (TODO)
+    - difftest monitor
+    - LightSSS
+    - gdb remote (TODO)
 
 ## ISA支持
 
-- RISC-V 32 IMAC
+- RISC-V 32 IMACSU
 - zicsr zifencei zicntr
 - 支持S模式和U模式
 - 只支持单Hart

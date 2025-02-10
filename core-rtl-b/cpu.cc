@@ -54,8 +54,10 @@ int cpu_step() {
   tot_inst++;
   while (true) {
     do_cycle();
-    if (top_module->debugIO_ebreak) { // ebreak指令提交
-      return gpr(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;
+    if constexpr (ISDEF(CONF_TRAP)) {
+      if (top_module->debugIO_ebreak) { // ebreak指令提交
+        return gpr(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;
+      }
     }
     if (top_module->debugIO_commit) { // 一般指令提交
       return top_module->debugIO_skip ? CORE_ACT_SKIP : CORE_ACT_NONE;
