@@ -52,16 +52,20 @@ int cpu_exec() {
   dut->core_stat();
   difftest_exit();
 
-  if (ret == CORE_ACT_GOOD_TRAP) {
-    if (lightsss_flag) lightsss_exit(); // 回收所有子进程
-    // 仿真正常结束时不会唤醒子进程
-    // 子进程不应执行到这里
-    assert(lightsss_flag);
-    return 0;
+  if constexpr (ISDEF(CONF_LIGHTSSS)) {
+    if (ret == CORE_ACT_GOOD_TRAP) {
+      if (lightsss_flag) lightsss_exit(); // 回收所有子进程
+      // 仿真正常结束时不会唤醒子进程
+      // 子进程不应执行到这里
+      assert(lightsss_flag);
+      return 0;
+    }
+    // 仿真出错
+    if (lightsss_flag) { // 父进程
+      lightsss_wake(); // 唤醒子进程
+    }
+    return 1;
+  } else {
+    return ret != CORE_ACT_GOOD_TRAP;
   }
-  // 仿真出错
-  if (lightsss_flag) { // 父进程
-    lightsss_wake(); // 唤醒子进程
-  }
-  return 1;
 }
