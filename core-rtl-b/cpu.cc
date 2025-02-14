@@ -1,6 +1,7 @@
 #include "common.h"
 #include "utils.h"
 #include "cpu.h"
+#include "soc.h"
 
 #include <verilated_vcd_c.h>
 #include <string>
@@ -33,6 +34,12 @@ static void do_eval() {
 
 static void do_cycle() {
   tot_cycle++;
+
+  const word_t mip = soc_get_mip();
+  top_module->io_msip = (mip >> 3) & 1;
+  top_module->io_mtip = (mip >> 7) & 1;
+  top_module->io_meip = (mip >> 11) & 1;
+
   top_module->clock = 0; do_eval();
   top_module->clock = 1; do_eval();
 }

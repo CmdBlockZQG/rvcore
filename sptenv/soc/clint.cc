@@ -6,7 +6,7 @@
 static uint64_t get_time() {
   timespec now{};
   clock_gettime(CLOCK_MONOTONIC_COARSE, &now);
-  return now.tv_sec * 1000000 + now.tv_nsec / 1000;
+  return (now.tv_sec * 1000000 + now.tv_nsec / 1000) / 10;
 }
 
 uint64_t CLINT::get_mtime() const {

@@ -79,7 +79,7 @@ void Hart::mtrap(word_t mcause, word_t mtval) {
   if ((csr.mtvec & 0b11) == 1 && (mcause >> 31)) {
     set_pc((csr.mtvec & ~0b11) + (mcause << 2));
   } else {
-    set_pc(csr.mtvec);
+    set_pc(csr.mtvec & ~0b11);
   }
   // 将mstatus.MIE保存至mstatus.MPIE
   csr.mstatus = (csr.mstatus & ~(1 << 7)) | (mstatus_MIE << 7);
@@ -100,7 +100,7 @@ void Hart::strap(word_t scause, word_t stval) {
   if ((csr.stvec & 0b11) == 1 && (scause >> 31)) {
     set_pc((csr.stvec & ~0b11) + (scause << 2));
   } else {
-    set_pc(csr.stvec);
+    set_pc(csr.stvec & ~0b11);
   }
   // 将mstatus.SIE保存至mstatus.SPIE
   csr.mstatus = (csr.mstatus & ~(1 << 5)) | (mstatus_SIE << 5);
