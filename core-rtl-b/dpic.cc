@@ -18,12 +18,18 @@ void pmem_read(const int raddr, const int rsize, int *rdata) {
 }
 
 void pmem_write(const int waddr, const int wsize, const int wdata, const char wmask) {
-  const word_t data = wdata >> ((waddr & 0x3u) * 8);
-  const word_t mask = wmask >> (waddr & 0x3u);
+  const int lo = waddr & 0x3;
+  const word_t data = wdata >> (lo * 8);
+  const word_t mask = wmask >> lo;
   switch (wsize) {
-    case 0: assert(mask == 0x1); paddr_write(waddr, 1, data); break;
-    case 1: assert(mask == 0x3); paddr_write(waddr, 2, data); break;
-    case 2: assert(mask == 0xf); paddr_write(waddr, 4, data); break;
+    case 0: if (mask == 0x1) { paddr_write(waddr, 1, data); return; } break;
+    case 1: if (mask == 0x3) { paddr_write(waddr, 2, data); return; } break;
+    case 2: if (mask == 0xf) { paddr_write(waddr, 4, data); return; } break;
     default: assert(0);
   }
+  const paddr_t addr = waddr & ~0x3u;
+  if (wmask & 0b0001) paddr_write(addr + 0, 1, wdata >> 0);
+  if (wmask & 0b0010) paddr_write(addr + 1, 1, wdata >> 8);
+  if (wmask & 0b0100) paddr_write(addr + 2, 1, wdata >> 16);
+  if (wmask & 0b1000) paddr_write(addr + 3, 1, wdata >> 24);
 }
