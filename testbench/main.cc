@@ -56,5 +56,9 @@ int main(const int argc, char *argv[]) {
     Log("Run with " ANSI_FMT("LightSSS", ANSI_FG_YELLOW));
   }
 
+  if constexpr (ISDEF(CONF_WAVE)) {
+    dut->trace_start();
+  }
+
   return cpu_exec();
 }
