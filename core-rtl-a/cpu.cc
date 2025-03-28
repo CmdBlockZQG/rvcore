@@ -1,20 +1,22 @@
+#include "common.h"
+#include "utils.h"
 #include "cpu.h"
+#include "soc.h"
 
 #include <verilated_vcd_c.h>
 #include <string>
 
-Vtop *top_module;
-
-int cpu_state = ST_RUNNING;
-vaddr_t cpu_pc;
-
-static VerilatedContext *contextp;
+VTop *top_module;
+static VerilatedContext *contextp = nullptr;
 static VerilatedVcdC *wave = nullptr;
 
-static void init_wave() {
+static long tot_cycle = 0;
+static long tot_inst = 0;
+
+void init_wave() {
   extern std::string log_dir;
-  std::string wave_filename = log_dir + "rtl-a-wave.vcd";
-  Verilated::traceEverOn(true);
+  const std::string wave_filename = log_dir + "rtl-a-wave.vcd";
+  contextp->traceEverOn(true);
   wave = new VerilatedVcdC;
   top_module->trace(wave, 99);
   wave->open(wave_filename.c_str());
@@ -24,23 +26,29 @@ static void init_wave() {
 
 static void do_eval() {
   top_module->eval();
-  contextp->timeInc(1);
-  if (wave) wave->dump(contextp->time());
+  if (wave) {
+    contextp->timeInc(1);
+    wave->dump(contextp->time());
+  }
 }
 
 static void do_cycle() {
+  tot_cycle++;
+
+  if constexpr (ISDEF(CONF_INTR)) {
+    const word_t mip = soc_get_mip();
+    top_module->io_msip = (mip >> 3) & 1;
+    top_module->io_mtip = (mip >> 7) & 1;
+    top_module->io_meip = (mip >> 11) & 1;
+  }
+
   top_module->clock = 0; do_eval();
   top_module->clock = 1; do_eval();
 }
 
 void cpu_init() {
   contextp = new VerilatedContext;
-  contextp->commandArgs(0, static_cast<char **>(nullptr));
-  top_module = new Vtop(contextp, "top");
-
-  if constexpr (ISDEF(CONF_WAVE)) {
-    init_wave();
-  }
+  top_module = new VTop(contextp, "Top");
 
   top_module->reset = 1;
   int n = 20;
@@ -52,23 +60,29 @@ void cpu_init() {
 }
 
 int cpu_step() {
-  cpu_state = ST_RUNNING;
-  while (cpu_state == ST_RUNNING) {
+  tot_inst++;
+  while (true) {
     do_cycle();
-  }
-  switch (cpu_state) {
-    case ST_STOP: return CORE_ACT_NONE;
-    case ST_HALT: return CORE_ACT_GOOD_TRAP;
-    case ST_ABORT: return CORE_ACT_BAD_TRAP;
-    default: assert(0);
+    if constexpr (ISDEF(CONF_TRAP)) {
+      if (top_module->debugIO_ebreak) { // ebreak指令提交
+        return gpr(10) ? CORE_ACT_BAD_TRAP : CORE_ACT_GOOD_TRAP;
+      }
+    }
+    if (top_module->debugIO_commit) { // 一般指令提交
+      return top_module->debugIO_skip ? CORE_ACT_SKIP : CORE_ACT_NONE;
+    }
   }
 }
 
 void cpu_exit() {
   if (wave) wave->close();
   delete top_module;
-  delete contextp;
-  // 输出性能计数器值到log
-  void log_perf_stat();
-  log_perf_stat();
+  // TODO: 在子进程中delete contextp会导致卡死
+  // delete contextp;
+}
+
+void cpu_stat() {
+  Log("Total cycles: %ld", tot_cycle);
+  Log("Total instructions: %ld", tot_inst);
+  Log("Total IPC: %.2f", static_cast<double>(tot_inst) / tot_cycle);
 }

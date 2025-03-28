@@ -1,4 +1,4 @@
-TOP_NAME = top
+TOP_NAME = Top
 
 VERILATOR = verilator
 VERILATOR_FLAGS = -cc --build --trace --timescale "1ns/1ns" --no-timing --autoflush \
@@ -6,8 +6,7 @@ VERILATOR_FLAGS = -cc --build --trace --timescale "1ns/1ns" --no-timing --autofl
 									-CFLAGS -O3 -CFLAGS -fPIC
 
 OBJ_DIR = ./verilated_obj
-VSRCS = $(shell find $(abspath ./vsrc) -name "*.sv")
-INCDIR = "$(abspath ./vsrc)"
+VSRC = ./Top.sv
 
 .DEFAULT_GOAL = build
 
@@ -15,8 +14,7 @@ build:
 	@rm -rf $(OBJ_DIR)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 		--top-module $(TOP_NAME) \
-		$(VSRCS) $(addprefix -y , $(INCDIR)) \
-		--Mdir $(OBJ_DIR)
+		$(VSRC) --Mdir $(OBJ_DIR)
 
 clean:
 	@rm -rf $(OBJ_DIR)
