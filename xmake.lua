@@ -43,6 +43,26 @@ target("core-rtl-a")
   set_symbols("hidden")
   add_files("core-rtl-a/*.cc")
 
+-- RV32-O2-T
+target("core-rtl-b")
+  -- 依赖公共动态库
+  add_deps("common")
+  -- 依赖支持环境，和sptenv一起编译
+  add_includedirs("sptenv/include")
+  add_files("sptenv/**.cc")
+  -- 依赖verilated模型
+  add_includedirs(
+    "core-rtl-b/verilated_obj",
+    "/usr/local/share/verilator/include",
+    "/usr/local/share/verilator/include/vltstd"
+  )
+  add_linkdirs("core-rtl-b/verilated_obj")
+  add_links("verilated", "VTop")
+  -- 生成动态库文件，供testbench运行时加载
+  set_kind("shared")
+  set_symbols("hidden")
+  add_files("core-rtl-b/*.cc")
+
 -- testbench
 target("testbench")
   add_deps("common")

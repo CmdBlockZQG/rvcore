@@ -23,8 +23,8 @@ CmdBlock的RISC-V处理器核测试平台，包含模拟器GoldenModel实现
     - difftest ref/dut
     - 实现相关的trace工具
   - `core-emu`：软件ISA模拟器实现
-  - `core-rtl-a`：简单短流水线rtl实现
-  - `core-rtl-b`：RV32-S7-F的rtl实现，仅包含驱动部分
+  - `core-rtl-a`：RV32-S7-F的rtl实现，仅包含驱动部分
+  - `core-rtl-b`：RV32-O2-T的rtl实现，仅包含驱动部分
 - `testbench`
   - 测试平台，驱动core运行
     - difftest monitor

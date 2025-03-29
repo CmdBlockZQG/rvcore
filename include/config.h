@@ -11,7 +11,7 @@
 // #define CONF_INTR 1
 
 #define CONF_TRAP 1
-#define CONF_LIGHTSSS 1
-// #define CONF_WAVE 1
+// #define CONF_LIGHTSSS 1
+#define CONF_WAVE 1
 
 #endif

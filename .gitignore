@@ -13,3 +13,4 @@
 build/
 verilated_obj/
 core-rtl-a/Top.sv
+core-rtl-b/Top.sv

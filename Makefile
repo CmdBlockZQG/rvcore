@@ -2,7 +2,7 @@ BIN = build/testbench
 ARGS ?= --log=build
 
 #CORE = emu
-CORE = rtl-a
+CORE = rtl-b
 REF = emu
 
 override ARGS += --core=$(CORE)
